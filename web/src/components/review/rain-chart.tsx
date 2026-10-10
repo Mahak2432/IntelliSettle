@@ -1,6 +1,7 @@
 /** Daily rainfall bars with the 100 mm / 24 h policy trigger drawn as a line. */
 export function RainChart({ daily, lossDate, trigger = 100 }: { daily: Record<string, number>; lossDate: string; trigger?: number }) {
-  const days = Object.entries(daily);
+  // Firestore does not preserve map order, so sort the days explicitly.
+  const days = Object.entries(daily).sort(([a], [b]) => a.localeCompare(b));
   if (!days.length) return null;
   const max = Math.max(trigger * 1.15, ...days.map(([, v]) => v));
   const h = 120;

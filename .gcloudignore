@@ -1,0 +1,13 @@
+# Only the API code, its lockfile and the seed data are uploaded to Cloud Build. Never secrets or caches.
+# Leading slashes anchor rules to the repo root (src/claims_api/api/ must not be excluded).
+*
+!/Dockerfile
+!/api/
+/api/*
+!/api/pyproject.toml
+!/api/uv.lock
+!/api/src/
+!/data/
+/data/*
+!/data/seed/
+**/__pycache__/
