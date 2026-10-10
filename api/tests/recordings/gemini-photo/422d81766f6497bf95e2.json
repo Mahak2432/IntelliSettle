@@ -1,0 +1,28 @@
+{
+  "request": {
+    "model": "gemini-3.5-flash",
+    "system": "You are an agricultural loss assessor in India reviewing photos a farmer submitted with a crop insurance claim. Describe only what is visible. Be specific and conservative. Flag anything that suggests the photo is not an original field photo: screenshots, watermarks, stock-photo framing, signs of editing or AI generation, or scenes that do not match the claimed crop or season.",
+    "prompt": "Claimed loss: flood or inundation on 30 September 2024. Insured crop: paddy (Kharif 2024), Darbhanga, Bihar. Farmer's description: \"रात में कोसी का बाँध टूट गया, पूरा धान का खेत पानी में डूब गया है।\". Assess the attached photos.",
+    "schema": "PhotoAssessment",
+    "images": [
+      "7d46d96717d65a48520c91fd2f656b0a94cfb73f82129d955c2f0fc3fe333fb0"
+    ],
+    "google_search": false
+  },
+  "recorded_at": "2026-10-10T20:35:05.037483+00:00",
+  "response": {
+    "data": {
+      "shows_farm_field": true,
+      "crop_seen": "Paddy (rice)",
+      "crop_matches_policy": "yes",
+      "damage_visible": true,
+      "damage_type": "Severe inundation and flooding",
+      "consistent_with_peril": "yes",
+      "severity_percent": 70,
+      "authenticity_concerns": [],
+      "summary": "Wide-angle field view shows extensive standing floodwater submerging large sections of young-to-vegetative paddy fields, consistent with the reported embankment breach and flood event."
+    },
+    "sources": [],
+    "model": "gemini-3.7-flash"
+  }
+}

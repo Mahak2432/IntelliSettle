@@ -98,25 +98,44 @@ class GeminiClient:
                 response_schema=schema,
                 tools=[types.Tool(google_search=types.GoogleSearch())] if google_search else None,
             )
-            response = await self._with_retry(
-                lambda: self._sdk().aio.models.generate_content(model=model, contents=contents, config=config)
-            )
+            chain = [model] + [m for m in self.settings.gemini_fallback_models if m != model]
+            for i, candidate in enumerate(chain):
+                try:
+                    response = await self._with_retry(
+                        lambda m=candidate: self._sdk().aio.models.generate_content(
+                            model=m, contents=contents, config=config
+                        )
+                    )
+                    break
+                except genai_errors.APIError as exc:
+                    out_of_capacity = exc.code == 429 or (exc.code or 0) >= 500
+                    if not out_of_capacity or i == len(chain) - 1:
+                        raise
+                    log.warning(
+                        "Gemini %s unavailable (%s); falling back to %s", candidate, exc.code, chain[i + 1]
+                    )
             if not response.text:
-                raise AIUnavailable(f"Empty response from {model}")
-            return {"data": json.loads(response.text), "sources": _grounding_sources(response)}
+                raise AIUnavailable(f"Empty response from {candidate}")
+            return {
+                "data": json.loads(response.text),
+                "sources": _grounding_sources(response),
+                "model": candidate,
+            }
 
         return await self.recorder.call(namespace, request, fetch)
 
     async def _with_retry(self, call):
-        """Wait out rate limits (the free tier allows ~5 requests/minute/model) and brief outages."""
+        """Wait out per-minute rate limits and brief outages. Daily-quota errors fail fast (no short hint)."""
         for attempt in range(MAX_ATTEMPTS):
             try:
                 return await call()
             except genai_errors.APIError as exc:
-                retryable = exc.code == 429 or (exc.code or 0) >= 500
+                hint = _retry_delay(exc)
+                # A 429 without a retry hint means the feature or daily quota is unavailable: fail fast.
+                retryable = (exc.code == 429 and hint is not None) or (exc.code or 0) >= 500
                 if not retryable or attempt == MAX_ATTEMPTS - 1:
                     raise
-                delay = _retry_delay(exc) or min(2**attempt * 5, 60)
+                delay = hint or min(2**attempt * 5, 60)
                 log.warning("Gemini %s; retrying in %.0fs (attempt %d)", exc.code, delay, attempt + 1)
                 await asyncio.sleep(delay)
         raise AIUnavailable("unreachable")

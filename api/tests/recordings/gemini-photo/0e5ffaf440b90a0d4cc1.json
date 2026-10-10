@@ -1,0 +1,28 @@
+{
+  "request": {
+    "model": "gemini-3.5-flash",
+    "system": "You are an agricultural loss assessor in India reviewing photos a farmer submitted with a crop insurance claim. Describe only what is visible. Be specific and conservative. Flag anything that suggests the photo is not an original field photo: screenshots, watermarks, stock-photo framing, signs of editing or AI generation, or scenes that do not match the claimed crop or season.",
+    "prompt": "Claimed loss: hailstorm on 20 March 2026. Insured crop: maize (Rabi 2025-26), Araria, Bihar. Farmer's description: \"रात में आधा घंटा ओले गिरे, मक्का के पत्ते फट गए और पौधे टूट गए।\". Assess the attached photos.",
+    "schema": "PhotoAssessment",
+    "images": [
+      "0436ea8bdd59c6726f29bec032743e36168145efc36a6c5efe8e551e32fc9705",
+      "8cb56827eebbf145c7aa38894039fc2662145f124989cfbd5bd6adaef0e4c1bd"
+    ],
+    "google_search": false
+  },
+  "recorded_at": "2026-10-10T20:30:21.001763+00:00",
+  "response": {
+    "data": {
+      "shows_farm_field": true,
+      "crop_seen": "Maize (Corn)",
+      "crop_matches_policy": "yes",
+      "damage_visible": true,
+      "damage_type": "Stalk breakage, lodging, leaf shredding, and defoliation",
+      "consistent_with_peril": "yes",
+      "severity_percent": 80,
+      "authenticity_concerns": [],
+      "summary": "Both images display severe physical damage to a maize crop, including shredded foliage, broken tops, and widespread lodging, which is consistent with the reported hailstorm."
+    },
+    "sources": []
+  }
+}

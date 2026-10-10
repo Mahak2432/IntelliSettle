@@ -1,5 +1,8 @@
 {
-  "photos": [],
+  "photos": [
+    "damage-1.jpg",
+    "damage-2.jpg"
+  ],
   "land_record": "khatiyan.jpg",
   "bank_passbook": "passbook.jpg"
 }

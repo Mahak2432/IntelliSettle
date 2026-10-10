@@ -41,10 +41,12 @@ class AIScoreOutput(BaseModel):
 
 SYSTEM = """You are a senior crop-insurance claims investigator in India.
 Score from 0 to 100 how likely it is that the claimed loss event really happened at this farm as described.
-- 90-100: several independent sources confirm the event at this place and time, and nothing contradicts it.
-- 70-89: credible support with minor gaps.
-- 40-69: mixed or thin evidence; a person should look closely.
-- 0-39: independent evidence contradicts the claim, or rules were broken.
+- 80-100: at least one independent source confirms the event at this place and time, every rule check
+  passed, and nothing credible contradicts it.
+- 60-79: credible support, but with gaps or a minor concern.
+- 31-59: mixed or thin evidence; a person should look closely.
+- 0-30: independent evidence contradicts the claim (for example radar shows a dry field soon after the
+  claimed flood, or no rain fell), or a rule check failed.
 Your score does not approve or pay anything. A human claims officer makes every decision.
 In "reasons", give 2-5 short, specific points citing the evidence.
 In "red_flags", list concrete concerns (or none).
@@ -93,7 +95,7 @@ class GeminiTruthScorer:
             namespace="gemini-truth-score", system=SYSTEM, prompt=prompt, schema=AIScoreOutput
         )
         out = AIScoreOutput.model_validate(result["data"])
-        return TruthScore(**out.model_dump(), model=self.gemini.model)
+        return TruthScore(**out.model_dump(), model=result.get("model", self.gemini.model))
 
 
 class HeuristicTruthScorer:

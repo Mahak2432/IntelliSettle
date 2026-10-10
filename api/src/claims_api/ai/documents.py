@@ -103,7 +103,7 @@ class DocumentReader:
             kind=document.kind,
             language=reading.language,
             fields=validate_fields(fields),
-            model=self.gemini.settings.gemini_model_lite,
+            model=result.get("model", self.gemini.settings.gemini_model_lite),
         )
 
 

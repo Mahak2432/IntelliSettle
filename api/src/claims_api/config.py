@@ -20,6 +20,8 @@ class Settings(BaseSettings):
 
     gemini_model: str = "gemini-3.5-flash"
     gemini_model_lite: str = "gemini-3.1-flash-lite"
+    # Tried in order when a model is out of quota or overloaded.
+    gemini_fallback_models: list[str] = ["gemini-3.7-flash", "gemini-3.5-flash-lite"]
 
     # live: call real services. record: call them and save responses. replay: only use saved responses.
     external_mode: Literal["live", "record", "replay"] = "live"

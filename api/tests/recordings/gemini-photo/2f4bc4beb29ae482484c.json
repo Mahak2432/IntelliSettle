@@ -1,0 +1,31 @@
+{
+  "request": {
+    "model": "gemini-3.5-flash",
+    "system": "You are an agricultural loss assessor in India reviewing photos a farmer submitted with a crop insurance claim. Describe only what is visible. Be specific and conservative. Flag anything that suggests the photo is not an original field photo: screenshots, watermarks, stock-photo framing, signs of editing or AI generation, or scenes that do not match the claimed crop or season.",
+    "prompt": "Claimed loss: very heavy or excess rainfall on 19 October 2021. Insured crop: paddy (Kharif 2021), Araria, Bihar. Farmer's description: \"कल दिन भर बहुत तेज़ बारिश हुई, कटने को तैयार धान खेत में गिर कर सड़ रही है।\". Assess the attached photos.",
+    "schema": "PhotoAssessment",
+    "images": [
+      "eddab7f72c76400d62c6e2f43e511b4e4fc5cebc94ed384197b20f7f84894ac7"
+    ],
+    "google_search": false
+  },
+  "recorded_at": "2026-10-10T20:42:46.302664+00:00",
+  "response": {
+    "data": {
+      "shows_farm_field": true,
+      "crop_seen": "Paddy (rice)",
+      "crop_matches_policy": "yes",
+      "damage_visible": true,
+      "damage_type": "Minor to moderate lodging and leaning",
+      "consistent_with_peril": "no",
+      "severity_percent": 15,
+      "authenticity_concerns": [
+        "Background village architecture and tree line strongly resemble East Asian (likely Japanese) countryside rather than rural Araria, Bihar",
+        "Field conditions show no significant waterlogging, standing floodwater, or rotting as described in the claim"
+      ],
+      "summary": "While mature paddy with partial leaning/lodging is visible, the background buildings and landscape features indicate the photograph was not taken in Araria, Bihar. The claimed severe rainfall damage and rotting are also not substantiated by the photo."
+    },
+    "sources": [],
+    "model": "gemini-3.7-flash"
+  }
+}

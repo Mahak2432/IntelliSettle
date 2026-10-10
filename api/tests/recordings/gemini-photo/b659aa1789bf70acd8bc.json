@@ -1,0 +1,27 @@
+{
+  "request": {
+    "model": "gemini-3.5-flash",
+    "system": "You are an agricultural loss assessor in India reviewing photos a farmer submitted with a crop insurance claim. Describe only what is visible. Be specific and conservative. Flag anything that suggests the photo is not an original field photo: screenshots, watermarks, stock-photo framing, signs of editing or AI generation, or scenes that do not match the claimed crop or season.",
+    "prompt": "Claimed loss: flood or inundation on 25 October 2023. Insured crop: paddy (Kharif 2023), Darbhanga, Bihar. Farmer's description: \"बाढ़ का पानी खेत में घुस गया, धान की पूरी फसल खराब हो गई।\". Assess the attached photos.",
+    "schema": "PhotoAssessment",
+    "images": [
+      "565bd8ac741820d9042de95bbd733f781ab6fd96f5880266f366802d0145cb69"
+    ],
+    "google_search": false
+  },
+  "recorded_at": "2026-10-10T20:31:34.889311+00:00",
+  "response": {
+    "data": {
+      "shows_farm_field": true,
+      "crop_seen": "Paddy / flooded field vegetation",
+      "crop_matches_policy": "yes",
+      "damage_visible": true,
+      "damage_type": "Inundation / Flooding",
+      "consistent_with_peril": "yes",
+      "severity_percent": 85,
+      "authenticity_concerns": [],
+      "summary": "Extensive floodwater submerging agricultural fields and field bunds is clearly visible, fully consistent with the claimed flood damage to paddy."
+    },
+    "sources": []
+  }
+}
