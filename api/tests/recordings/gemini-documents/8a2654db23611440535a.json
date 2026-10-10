@@ -1,0 +1,37 @@
+{
+  "request": {
+    "model": "gemini-3.1-flash-lite",
+    "system": "You read photos of Indian land and banking documents for a crop insurance company. Documents may be handwritten, in Hindi (Devanagari) or English, skewed, folded or faded. Copy names exactly as written, keeping Devanagari script. Convert all digits to ASCII 0-9. Give each field an honest confidence from 0 to 1. If a field is missing or unreadable, return null with low confidence. Never guess.",
+    "prompt": "This is the first page of a bank passbook. Extract the account holder, the last 4 digits of the account number, the IFSC code and the bank name.",
+    "schema": "PassbookReading",
+    "images": [
+      "82e30524123ded6ae0b7de89dd31597d69fc58d97aeb79acc6a1f3f310eb3bd3"
+    ],
+    "google_search": false
+  },
+  "recorded_at": "2026-10-10T20:16:36.156827+00:00",
+  "response": {
+    "data": {
+      "language": "English/Hindi",
+      "fields": {
+        "account_holder": {
+          "value": "सुनीता देवी (Sunita Devi)",
+          "confidence": 1
+        },
+        "account_last4": {
+          "value": "2056",
+          "confidence": 1
+        },
+        "ifsc": {
+          "value": "PGBK0412300",
+          "confidence": 1
+        },
+        "bank_name": {
+          "value": "Purnia Gramin Bank",
+          "confidence": 1
+        }
+      }
+    },
+    "sources": []
+  }
+}

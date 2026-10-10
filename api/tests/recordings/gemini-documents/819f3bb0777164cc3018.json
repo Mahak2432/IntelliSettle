@@ -1,0 +1,45 @@
+{
+  "request": {
+    "model": "gemini-3.5-flash",
+    "system": "You read photos of Indian land and banking documents for a crop insurance company. Documents may be handwritten, in Hindi (Devanagari) or English, skewed, folded or faded. Copy names exactly as written, keeping Devanagari script. Convert all digits to ASCII 0-9. Give each field an honest confidence from 0 to 1. If a field is missing or unreadable, return null with low confidence. Never guess.",
+    "prompt": "This is a land record extract (Khatauni / Khatiyan / Jamabandi). Extract the plot (khasra) number, owner name, father's name, village, district and area in hectares (convert from acres or bigha only if the unit is written; otherwise copy the number as written).",
+    "schema": "LandRecordReading",
+    "images": [
+      "09065c6fad85c7107c78c9f0454380091308d8505b458a44960c20581ebed909"
+    ],
+    "google_search": false
+  },
+  "recorded_at": "2026-10-10T20:14:40.949512+00:00",
+  "response": {
+    "data": {
+      "language": "hi",
+      "fields": {
+        "khasra_no": {
+          "value": "1142",
+          "confidence": 0.98
+        },
+        "owner_name": {
+          "value": "रमेश यादव",
+          "confidence": 0.98
+        },
+        "father_name": {
+          "value": "Shivnath Yadav",
+          "confidence": 0.98
+        },
+        "village": {
+          "value": "Bhobhaul",
+          "confidence": 0.95
+        },
+        "district": {
+          "value": "Darbhanga",
+          "confidence": 0.98
+        },
+        "area_ha": {
+          "value": "0.8",
+          "confidence": 0.95
+        }
+      }
+    },
+    "sources": []
+  }
+}

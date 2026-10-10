@@ -88,8 +88,14 @@ class DocumentReader:
     async def read(self, document: DocumentUpload) -> DocumentExtraction:
         schema, instructions = SCHEMAS[document.kind]
         image = ImageInput(data=await self.blobs.get(document.storage_path))
+        # Flash-Lite reads documents well and has its own rate-limit quota, leaving Flash for reasoning.
         result = await self.gemini.generate_json(
-            namespace="gemini-documents", system=SYSTEM, prompt=instructions, schema=schema, images=[image]
+            namespace="gemini-documents",
+            system=SYSTEM,
+            prompt=instructions,
+            schema=schema,
+            images=[image],
+            model=self.gemini.settings.gemini_model_lite,
         )
         reading = schema.model_validate(result["data"])
         fields = {name: field for name, field in reading.fields}
@@ -97,7 +103,7 @@ class DocumentReader:
             kind=document.kind,
             language=reading.language,
             fields=validate_fields(fields),
-            model=self.gemini.model,
+            model=self.gemini.settings.gemini_model_lite,
         )
 
 

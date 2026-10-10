@@ -7,17 +7,24 @@ tests can replay real model responses.
 
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import json
+import logging
+import re
 from dataclasses import dataclass
 from typing import Any
 
 from google import genai
+from google.genai import errors as genai_errors
 from google.genai import types
 from pydantic import BaseModel
 
 from claims_api.config import Settings
 from claims_api.infra.replay import Recorder
+
+log = logging.getLogger(__name__)
+MAX_ATTEMPTS = 5
 
 
 class AIUnavailable(RuntimeError):
@@ -91,14 +98,33 @@ class GeminiClient:
                 response_schema=schema,
                 tools=[types.Tool(google_search=types.GoogleSearch())] if google_search else None,
             )
-            response = await self._sdk().aio.models.generate_content(
-                model=model, contents=contents, config=config
+            response = await self._with_retry(
+                lambda: self._sdk().aio.models.generate_content(model=model, contents=contents, config=config)
             )
             if not response.text:
                 raise AIUnavailable(f"Empty response from {model}")
             return {"data": json.loads(response.text), "sources": _grounding_sources(response)}
 
         return await self.recorder.call(namespace, request, fetch)
+
+    async def _with_retry(self, call):
+        """Wait out rate limits (the free tier allows ~5 requests/minute/model) and brief outages."""
+        for attempt in range(MAX_ATTEMPTS):
+            try:
+                return await call()
+            except genai_errors.APIError as exc:
+                retryable = exc.code == 429 or (exc.code or 0) >= 500
+                if not retryable or attempt == MAX_ATTEMPTS - 1:
+                    raise
+                delay = _retry_delay(exc) or min(2**attempt * 5, 60)
+                log.warning("Gemini %s; retrying in %.0fs (attempt %d)", exc.code, delay, attempt + 1)
+                await asyncio.sleep(delay)
+        raise AIUnavailable("unreachable")
+
+
+def _retry_delay(exc: Exception) -> float | None:
+    match = re.search(r"retry in ([\d.]+)s", str(exc))
+    return min(float(match.group(1)) + 1, 90) if match else None
 
 
 def _grounding_sources(response: types.GenerateContentResponse) -> list[dict[str, str]]:

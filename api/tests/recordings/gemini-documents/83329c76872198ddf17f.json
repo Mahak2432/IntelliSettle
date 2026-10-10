@@ -1,0 +1,45 @@
+{
+  "request": {
+    "model": "gemini-3.5-flash",
+    "system": "You read photos of Indian land and banking documents for a crop insurance company. Documents may be handwritten, in Hindi (Devanagari) or English, skewed, folded or faded. Copy names exactly as written, keeping Devanagari script. Convert all digits to ASCII 0-9. Give each field an honest confidence from 0 to 1. If a field is missing or unreadable, return null with low confidence. Never guess.",
+    "prompt": "This is a land record extract (Khatauni / Khatiyan / Jamabandi). Extract the plot (khasra) number, owner name, father's name, village, district and area in hectares (convert from acres or bigha only if the unit is written; otherwise copy the number as written).",
+    "schema": "LandRecordReading",
+    "images": [
+      "baec13201004df9900d8294e6a4781cdb824a68d07fd64effc75e57ae47cec6c"
+    ],
+    "google_search": false
+  },
+  "recorded_at": "2026-10-10T20:14:49.683631+00:00",
+  "response": {
+    "data": {
+      "language": "Hindi",
+      "fields": {
+        "khasra_no": {
+          "value": "577",
+          "confidence": 0.95
+        },
+        "owner_name": {
+          "value": "अब्दुल करीम",
+          "confidence": 0.95
+        },
+        "father_name": {
+          "value": "Abdul Rahim",
+          "confidence": 0.95
+        },
+        "village": {
+          "value": "Thengapur Pipra",
+          "confidence": 0.95
+        },
+        "district": {
+          "value": "Araria",
+          "confidence": 0.95
+        },
+        "area_ha": {
+          "value": "1.25",
+          "confidence": 0.95
+        }
+      }
+    },
+    "sources": []
+  }
+}

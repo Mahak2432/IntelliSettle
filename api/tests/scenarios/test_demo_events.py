@@ -58,7 +58,12 @@ class TrackingRecorder(Recorder):
 
 @pytest.fixture
 def recorder(request) -> TrackingRecorder:
-    mode = "record" if request.config.getoption("--record") else "replay"
+    if request.config.getoption("--refresh"):
+        mode = "refresh"
+    elif request.config.getoption("--record"):
+        mode = "record"
+    else:
+        mode = "replay"
     return TrackingRecorder(mode, RECORDINGS)
 
 

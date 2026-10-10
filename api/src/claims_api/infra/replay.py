@@ -2,8 +2,13 @@
 
 Every call to a weather API, Earth Engine or Gemini goes through `Recorder.call`.
 In tests we replay saved responses, so the demo scenarios run on real data
-every time without network access, cost or flakiness. Running the tests with
-`--record` refreshes the saved responses from the live services.
+every time without network access, cost or flakiness.
+
+Modes:
+- live: always call the service, save nothing (production).
+- replay: only use saved responses; a missing one is an error (tests).
+- record: use saved responses where they exist, call the service for the rest and save them.
+- refresh: call the service for everything and overwrite what was saved.
 """
 
 from __future__ import annotations
@@ -15,7 +20,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
-Mode = Literal["live", "record", "replay"]
+Mode = Literal["live", "record", "refresh", "replay"]
 
 
 class MissingRecording(LookupError):
@@ -41,13 +46,13 @@ class Recorder:
 
     async def call(self, namespace: str, request: dict[str, Any], fetch: Callable[[], Awaitable[Any]]) -> Any:
         path = self.path_for(namespace, request)
-        if self.mode == "replay":
-            if not path.exists():
-                raise MissingRecording(path, request)
+        if self.mode in ("replay", "record") and path.exists():
             return json.loads(path.read_text(encoding="utf-8"))["response"]
+        if self.mode == "replay":
+            raise MissingRecording(path, request)
 
         response = await fetch()
-        if self.mode == "record":
+        if self.mode in ("record", "refresh"):
             path.parent.mkdir(parents=True, exist_ok=True)
             payload = {
                 "request": request,
