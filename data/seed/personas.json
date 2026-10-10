@@ -46,9 +46,10 @@
     "district": "Darbhanga",
     "crop_en": "Paddy, 0.5 ha",
     "crop_hi": "धान, 0.5 हेक्टेयर",
-    "story_en": "Fraud test: claims a flood on a day when no rain fell and no river rose.",
-    "story_hi": "धोखाधड़ी जाँच: ऐसे दिन बाढ़ का दावा जब न बारिश हुई, न नदी चढ़ी।",
+    "story_en": "Claims a flood on a day when no rain fell and no river rose.",
+    "story_hi": "ऐसे दिन बाढ़ का दावा जब न बारिश हुई, न नदी चढ़ी।",
     "demo_today": "2023-10-26",
-    "peril": "flood"
+    "peril": "flood",
+    "fraud_test": true
   }
 ]

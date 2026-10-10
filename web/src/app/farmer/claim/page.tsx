@@ -5,10 +5,12 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { toast } from "sonner";
 import useSWR from "swr";
-import { BigButton, ErrorNote, Spinner } from "@/components/common";
+import { BigButton, ErrorNote } from "@/components/common";
 import { FarmerShell } from "@/components/farmer-shell";
 import { PerilIcon } from "@/components/peril-icon";
 import { StatusBadge } from "@/components/status-badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/lib/api";
 import { longDate, rupees, shortDateTime } from "@/lib/format";
@@ -54,7 +56,7 @@ function ClaimView() {
     </FarmerShell>
   );
   if (error) return shell(<div className="mt-8"><ErrorNote message={error.message} /></div>);
-  if (!claim) return shell(<div className="mt-10"><Spinner /></div>);
+  if (!claim) return shell(<div className="mt-6 space-y-4"><Skeleton className="h-12 w-64" /><Skeleton className="h-44 w-full rounded-[var(--radius-touch)]" /><Skeleton className="h-40 w-full" /></div>);
 
   const message = lang === "hi" ? claim.message_hi : claim.message_en;
   const reached = new Map(claim.timeline.map((e) => [e.status, e.at]));
@@ -72,7 +74,7 @@ function ClaimView() {
         </div>
       </div>
 
-      <section className="mt-6 rounded-[var(--radius-touch)] bg-surface p-5">
+      <Card className="mt-6 rounded-[var(--radius-touch)] text-base"><CardContent>
         <StatusBadge status={claim.status} />
         {IN_PROGRESS.includes(claim.status) && (
           <div className="mt-4 flex gap-3">
@@ -101,7 +103,7 @@ function ClaimView() {
             <p className="mt-1 text-lg leading-snug">{message}</p>
           </div>
         )}
-      </section>
+      </CardContent></Card>
 
       <ol className="mt-6 space-y-0">
         {JOURNEY.map((step, i) => {
@@ -133,7 +135,7 @@ function ClaimView() {
       </ol>
 
       {claim.can_appeal && (
-        <section className="mt-2 rounded-[var(--radius-touch)] bg-surface p-5">
+        <Card className="mt-2 rounded-[var(--radius-touch)] text-base"><CardContent>
           <h2 className="text-lg font-bold">{t("appealTitle")}</h2>
           <Textarea
             value={appeal}
@@ -145,7 +147,7 @@ function ClaimView() {
             <BadgeIndianRupee className="size-5" aria-hidden />
             {t("sendAppeal")}
           </BigButton>
-        </section>
+        </CardContent></Card>
       )}
     </>,
   );

@@ -5,6 +5,12 @@ import type { ClaimStatus, Lang, Peril, Verdict } from "@/lib/types";
 
 const en = {
   tagline: "Crop loss claims, checked in hours instead of months.",
+  heroSub: "Rainfall, satellite radar, local news and land records check every claim. A claims officer approves in one click.",
+  howTitle: "How a claim moves",
+  step1: "The farmer reports the loss by voice, with photos from the field.",
+  step2: "AI checks rainfall at the plot, radar flood images, news and the farmer's papers.",
+  step3: "An officer reviews the evidence and approves; the money goes straight to the bank account.",
+  fraudTest: "Fraud test",
   whoAreYou: "Who is using the app?",
   farmer: "Farmer",
   officer: "Claims officer",
@@ -87,6 +93,12 @@ type Dict = typeof en;
 
 const hi: Dict = {
   tagline: "फसल नुकसान के दावे की जाँच, महीनों नहीं घंटों में।",
+  heroSub: "हर दावे की जाँच बारिश के आँकड़ों, सैटेलाइट रडार, स्थानीय ख़बरों और भूमि रिकॉर्ड से होती है। दावा अधिकारी एक क्लिक में मंज़ूरी देते हैं।",
+  howTitle: "दावा कैसे आगे बढ़ता है",
+  step1: "किसान बोलकर नुकसान बताते हैं और खेत की फ़ोटो भेजते हैं।",
+  step2: "AI खेत पर हुई बारिश, रडार से बाढ़ की तस्वीरें, ख़बरें और किसान के कागज़ात जाँचता है।",
+  step3: "अधिकारी सबूत देखकर मंज़ूरी देते हैं और पैसा सीधे बैंक खाते में जाता है।",
+  fraudTest: "धोखाधड़ी जाँच",
   whoAreYou: "ऐप कौन इस्तेमाल कर रहा है?",
   farmer: "किसान",
   officer: "दावा अधिकारी",

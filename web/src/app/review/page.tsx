@@ -11,8 +11,11 @@ import { ReviewShell } from "@/components/review/review-shell";
 import { VERDICT_TONE, VerdictBadge } from "@/components/review/verdict";
 import { StatusBadge } from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/lib/api";
 import { longDate, rupees, shortDateTime } from "@/lib/format";
@@ -46,6 +49,9 @@ export default function ReviewQueue() {
   const filter: Filter = chosen ?? FILTERS.find((f) => counts[f.key] > 0)?.key ?? "looks_genuine";
   const rows = queue?.filter((q) => matches(q, filter)) ?? [];
   const checking = queue?.filter((q) => q.status === "submitted" || q.status === "assessing").length ?? 0;
+  const waiting = queue?.filter((q) => OPEN.has(q.status)).length ?? 0;
+  const genuinePayable =
+    queue?.filter((q) => matches(q, "looks_genuine")).reduce((sum, q) => sum + (q.amount_inr ?? 0), 0) ?? 0;
 
   return (
     <ReviewShell
@@ -66,6 +72,32 @@ export default function ReviewQueue() {
         {checking > 0 && <Spinner label={`AI is checking ${checking} new claim${checking > 1 ? "s" : ""}`} />}
       </div>
 
+      {queue && (
+        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          <Card size="sm" className="text-base">
+            <CardContent>
+              <p className="text-sm text-slate">Waiting for you</p>
+              <p className="w-condensed tabular text-4xl font-bold">{waiting}</p>
+            </CardContent>
+          </Card>
+          <Card size="sm" className="text-base">
+            <CardContent>
+              <p className="text-sm text-slate">Ready for fast approve</p>
+              <p className="flex items-baseline gap-2">
+                <span className="w-condensed tabular text-4xl font-bold text-paddy">{counts.looks_genuine}</span>
+                {genuinePayable > 0 && <span className="tabular text-slate">₹{rupees(genuinePayable)} payable</span>}
+              </p>
+            </CardContent>
+          </Card>
+          <Card size="sm" className="text-base">
+            <CardContent>
+              <p className="text-sm text-slate">Flagged as suspicious</p>
+              <p className="w-condensed tabular text-4xl font-bold text-chilli">{counts.looks_suspicious}</p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       <Tabs value={filter} onValueChange={(v) => setFilter(v as Filter)} className="mt-6">
         <TabsList className="h-auto flex-wrap">
           {FILTERS.map((f) => (
@@ -78,62 +110,68 @@ export default function ReviewQueue() {
       </Tabs>
 
       {error && <div className="mt-6"><ErrorNote message={error.message} /></div>}
-      {!queue && !error && <div className="mt-6"><Spinner /></div>}
+      {!queue && !error && (
+        <div className="mt-4 space-y-2">
+          {[0, 1, 2].map((i) => (
+            <Skeleton key={i} className="h-16 w-full" />
+          ))}
+        </div>
+      )}
       {queue && rows.length === 0 && (
         <p className="mt-10 text-center text-slate">Nothing here right now. New claims appear within a minute of being filed.</p>
       )}
 
       {rows.length > 0 && (
-        <div className="mt-4 overflow-x-auto rounded-xl border border-line bg-surface">
-          <table className="w-full min-w-[760px] text-left">
-            <thead className="border-b border-line text-sm text-slate">
-              <tr>
-                <th className="px-4 py-3 font-medium">Farmer</th>
-                <th className="px-4 py-3 font-medium">Loss</th>
-                <th className="px-4 py-3 font-medium">Filed</th>
-                <th className="px-4 py-3 text-right font-medium">Score</th>
-                <th className="px-4 py-3 font-medium">AI verdict</th>
-                <th className="px-4 py-3 text-right font-medium">Payout</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-line">
+        <Card className="mt-4 gap-0 py-0">
+          <Table className="min-w-[760px] text-base">
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="px-4 text-slate">Farmer</TableHead>
+                <TableHead className="text-slate">Loss</TableHead>
+                <TableHead className="text-slate">Filed</TableHead>
+                <TableHead className="text-right text-slate">Score</TableHead>
+                <TableHead className="text-slate">AI verdict</TableHead>
+                <TableHead className="px-4 text-right text-slate">Payout</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {rows.map((q) => (
-                <tr key={q.claim_id} className="relative hover:bg-indigo-soft/40">
-                  <td className="px-4 py-3">
+                <TableRow key={q.claim_id} className="relative hover:bg-indigo-soft/40">
+                  <TableCell className="px-4 py-3">
                     <Link href={`/review/claim/?id=${q.claim_id}`} className="font-semibold text-indigo after:absolute after:inset-0">
                       {q.farmer_name}
                     </Link>
                     <span className="block text-sm text-slate">
                       {q.village}, {q.district}
                     </span>
-                  </td>
-                  <td className="px-4 py-3">
+                  </TableCell>
+                  <TableCell className="py-3">
                     <span className="flex items-center gap-2">
                       <PerilIcon peril={q.peril} className="size-4 text-slate" />
                       {PERIL[q.peril].en}
                     </span>
-                    <span className="block text-sm text-slate capitalize">
+                    <span className="block text-sm capitalize text-slate">
                       {q.crop}, {longDate(q.loss_date)}
                     </span>
-                  </td>
-                  <td className="px-4 py-3 text-sm text-slate">{shortDateTime(q.submitted_at)}</td>
-                  <td className="px-4 py-3 text-right">
+                  </TableCell>
+                  <TableCell className="py-3 text-sm text-slate">{shortDateTime(q.submitted_at)}</TableCell>
+                  <TableCell className="py-3 text-right">
                     <span className={cn("w-condensed tabular text-3xl font-bold", q.verdict ? VERDICT_TONE[q.verdict].text : "text-slate")}>
                       {q.score ?? "…"}
                     </span>
-                  </td>
-                  <td className="px-4 py-3">
+                  </TableCell>
+                  <TableCell className="py-3">
                     {OPEN.has(q.status) && q.verdict ? <VerdictBadge verdict={q.verdict} /> : <StatusBadge status={q.status} lang="en" />}
                     {q.appealed && <span className="ml-2 text-sm text-haldi-ink">Appeal</span>}
-                  </td>
-                  <td className="tabular px-4 py-3 text-right font-semibold">
+                  </TableCell>
+                  <TableCell className="tabular px-4 py-3 text-right font-semibold">
                     {q.amount_inr != null ? `₹${rupees(q.amount_inr)}` : "…"}
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </Card>
       )}
 
       <ThresholdsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />

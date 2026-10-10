@@ -19,12 +19,16 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#1f2b5c",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f2f5f3" },
+    { media: "(prefers-color-scheme: dark)", color: "#0e141c" },
+  ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="hi" className={`${anek.variable} h-full antialiased`}>
+    // next-themes sets the theme class before hydration, so the attribute differs from the server render.
+    <html lang="hi" className={`${anek.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col">
         <Providers>{children}</Providers>
       </body>

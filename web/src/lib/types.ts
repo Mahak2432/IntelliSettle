@@ -68,6 +68,7 @@ export interface Persona {
   story_hi: string;
   demo_today: string;
   peril: Peril;
+  fraud_test?: boolean;
 }
 
 export interface RainAlert {

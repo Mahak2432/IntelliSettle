@@ -2,51 +2,94 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* Monsoon-field palette. Colour encodes verdicts only: paddy = genuine, haldi = review, chilli = suspicious. */
-@theme {
-  --color-page: #f2f5f3;
-  --color-surface: #ffffff;
-  --color-line: #d8e0db;
-  --color-ink: #1d2733;
-  --color-slate: #55616b;
-  --color-indigo: #1f2b5c;
-  --color-indigo-hover: #2a3a78;
-  --color-indigo-soft: #e7eaf5;
-  --color-paddy: #2e7d4f;
-  --color-paddy-soft: #e2f1e7;
-  --color-haldi: #d99a0b;
-  --color-haldi-ink: #845900;
-  --color-haldi-soft: #fbf0d6;
-  --color-chilli: #b42318;
-  --color-chilli-soft: #fbe6e3;
-  --color-water: #1d4ed8;
-  --radius-touch: 1.25rem;
-}
+@custom-variant dark (&:is(.dark *));
 
-/* shadcn/ui tokens mapped onto the palette (light only: farmers use this outdoors in daylight). */
+/*
+ * Monsoon field (light) and monsoon night (dark).
+ * Colour encodes verdicts only: paddy = genuine, haldi = needs review, chilli = suspicious.
+ * Solid fills (buttons) keep white text readable in both themes; "-ink" tokens are for text on soft fills.
+ */
 :root {
-  --background: #f2f5f3;
-  --foreground: #1d2733;
-  --card: #ffffff;
-  --card-foreground: #1d2733;
-  --popover: #ffffff;
-  --popover-foreground: #1d2733;
-  --primary: #1f2b5c;
+  --page: #f2f5f3;
+  --surface: #ffffff;
+  --line: #d8e0db;
+  --ink: #1d2733;
+  --slate: #55616b;
+  --indigo: #1f2b5c;
+  --indigo-hover: #2a3a78;
+  --indigo-soft: #e7eaf5;
+  --paddy: #2e7d4f;
+  --paddy-soft: #e2f1e7;
+  --haldi: #d99a0b;
+  --haldi-ink: #845900;
+  --haldi-soft: #fbf0d6;
+  --chilli: #b42318;
+  --chilli-soft: #fbe6e3;
+  --water: #1d4ed8;
+
+  --background: var(--page);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--indigo);
   --primary-foreground: #ffffff;
-  --secondary: #e7eaf5;
-  --secondary-foreground: #1f2b5c;
+  --secondary: var(--indigo-soft);
+  --secondary-foreground: var(--indigo);
   --muted: #e9eeeb;
-  --muted-foreground: #55616b;
-  --accent: #e7eaf5;
-  --accent-foreground: #1f2b5c;
-  --destructive: #b42318;
-  --border: #d8e0db;
+  --muted-foreground: var(--slate);
+  --accent: var(--indigo-soft);
+  --accent-foreground: var(--indigo);
+  --destructive: var(--chilli);
+  --border: var(--line);
   --input: #c9d3cd;
-  --ring: #1f2b5c;
+  --ring: var(--indigo);
   --radius: 0.75rem;
 }
 
+.dark {
+  --page: #0e141c;
+  --surface: #17202b;
+  --line: #2a3644;
+  --ink: #e4e9ee;
+  --slate: #98a5b1;
+  --indigo: #7486f3;
+  --indigo-hover: #8797f6;
+  --indigo-soft: #1d2645;
+  --paddy: #34a364;
+  --paddy-soft: #12301f;
+  --haldi: #e3a92a;
+  --haldi-ink: #f2c75e;
+  --haldi-soft: #392d0f;
+  --chilli: #e0534a;
+  --chilli-soft: #3a1714;
+  --water: #5b86ff;
+
+  --muted: #1f2a36;
+  --input: #34414f;
+  color-scheme: dark;
+}
+
 @theme inline {
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-slate: var(--slate);
+  --color-indigo: var(--indigo);
+  --color-indigo-hover: var(--indigo-hover);
+  --color-indigo-soft: var(--indigo-soft);
+  --color-paddy: var(--paddy);
+  --color-paddy-soft: var(--paddy-soft);
+  --color-haldi: var(--haldi);
+  --color-haldi-ink: var(--haldi-ink);
+  --color-haldi-soft: var(--haldi-soft);
+  --color-chilli: var(--chilli);
+  --color-chilli-soft: var(--chilli-soft);
+  --color-water: var(--water);
+  --radius-touch: 1.25rem;
+
   --font-sans: var(--font-anek), "Nirmala UI", system-ui, sans-serif;
   --font-heading: var(--font-sans);
   --color-ring: var(--ring);
@@ -109,10 +152,10 @@
 
 @keyframes listen-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgb(31 43 92 / 0.45);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--indigo) 45%, transparent);
   }
   100% {
-    box-shadow: 0 0 0 22px rgb(31 43 92 / 0);
+    box-shadow: 0 0 0 22px transparent;
   }
 }
 .listening {

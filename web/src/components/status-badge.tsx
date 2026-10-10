@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { STATUS, useLang } from "@/lib/i18n";
 import type { ClaimStatus, Lang } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -17,8 +18,8 @@ const TONE: Record<ClaimStatus, string> = {
 export function StatusBadge({ status, className, lang }: { status: ClaimStatus; className?: string; lang?: Lang }) {
   const { lang: current } = useLang();
   return (
-    <span className={cn("inline-flex rounded-full px-3 py-1 text-sm font-semibold", TONE[status], className)}>
+    <Badge className={cn("h-auto border-0 px-3 py-1 text-sm font-semibold", TONE[status], className)}>
       {STATUS[status][lang ?? current]}
-    </span>
+    </Badge>
   );
 }

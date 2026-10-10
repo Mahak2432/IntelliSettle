@@ -1,7 +1,8 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { CircleAlert, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { useLang } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -69,8 +70,9 @@ export function Spinner({ label }: { label?: string }) {
 
 export function ErrorNote({ message }: { message: string }) {
   return (
-    <p role="alert" className="rounded-xl bg-chilli-soft px-4 py-3 text-chilli">
-      {message}
-    </p>
+    <Alert variant="destructive" className="border-chilli/30 bg-chilli-soft px-4 py-3 text-base">
+      <CircleAlert aria-hidden />
+      <AlertDescription className="text-chilli">{message}</AlertDescription>
+    </Alert>
   );
 }

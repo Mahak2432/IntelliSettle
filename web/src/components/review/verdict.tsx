@@ -1,4 +1,5 @@
 import { CircleAlert, CircleCheck, CircleHelp } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { VERDICT } from "@/lib/i18n";
 import type { Thresholds, Verdict } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -15,10 +16,10 @@ export function VerdictBadge({ verdict, className }: { verdict: Verdict; classNa
   const Icon = ICON[verdict];
   const tone = VERDICT_TONE[verdict];
   return (
-    <span className={cn("inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold", tone.soft, tone.text, className)}>
+    <Badge className={cn("h-auto gap-1.5 border-0 px-3 py-1 text-sm font-semibold", tone.soft, tone.text, className)}>
       <Icon className="size-4" aria-hidden />
       {VERDICT[verdict]}
-    </span>
+    </Badge>
   );
 }
 

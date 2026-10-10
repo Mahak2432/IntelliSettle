@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function ReviewShell({ children, actions }: { children: React.ReactNode; actions?: React.ReactNode }) {
   return (
     <div className="flex min-h-full flex-1 flex-col">
-      <header className="border-b border-line bg-surface">
+      <header className="sticky top-0 z-20 border-b border-line bg-surface/90 backdrop-blur">
         <div className="mx-auto flex h-14 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
           <div className="flex items-baseline gap-3">
             <Link href="/review/" className="w-wide text-lg font-bold tracking-tight text-indigo">
@@ -13,6 +14,7 @@ export function ReviewShell({ children, actions }: { children: React.ReactNode; 
           </div>
           <div className="flex items-center gap-2">
             {actions}
+            <ThemeToggle english />
             <Link href="/" className="rounded-lg px-3 py-2 text-sm text-slate hover:bg-muted">
               Switch user
             </Link>
