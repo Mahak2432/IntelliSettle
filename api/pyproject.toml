@@ -1,0 +1,48 @@
+[project]
+name = "claims-api"
+version = "0.1.0"
+description = "AI claim-verification engine for parametric crop micro-insurance"
+requires-python = ">=3.12"
+dependencies = [
+    "earthengine-api>=1.7.47",
+    "fastapi>=0.143.0",
+    "firebase-admin>=7.7.0",
+    "google-genai>=2.29.0",
+    "httpx>=0.28.1",
+    "imagehash>=4.3.2",
+    "pillow>=12.3.0",
+    "pydantic-settings>=2.15.0",
+    "python-multipart>=0.0.32",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.0,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.17.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "scenario: end-to-end demo scenarios built on real past events",
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC"]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = [
+    "fastapi.Depends", "fastapi.File", "fastapi.Form", "fastapi.Header", "fastapi.Query",
+]

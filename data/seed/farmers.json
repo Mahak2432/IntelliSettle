@@ -1,0 +1,42 @@
+[
+  {
+    "farmer_id": "F-101",
+    "name": "Ramesh Yadav",
+    "name_hi": "रमेश यादव",
+    "father_name": "Shivnath Yadav",
+    "phone": "+919000000101",
+    "preferred_language": "hi",
+    "bank": {"account_holder": "Ramesh Yadav", "account_masked": "XXXXXX4821", "ifsc": "KOSG0003187", "bank_name": "Kosi Gramin Bank (demo)"},
+    "demo_today": "2024-10-01"
+  },
+  {
+    "farmer_id": "F-102",
+    "name": "Abdul Karim",
+    "name_hi": "अब्दुल करीम",
+    "father_name": "Abdul Rahim",
+    "phone": "+919000000102",
+    "preferred_language": "hi",
+    "bank": {"account_holder": "Abdul Karim", "account_masked": "XXXXXX7310", "ifsc": "SKBK0005678", "bank_name": "Seemanchal Kisan Bank (demo)"},
+    "demo_today": "2021-10-20"
+  },
+  {
+    "farmer_id": "F-103",
+    "name": "Sunita Devi",
+    "name_hi": "सुनीता देवी",
+    "father_name": "Bhola Mandal",
+    "phone": "+919000000103",
+    "preferred_language": "hi",
+    "bank": {"account_holder": "Sunita Devi", "account_masked": "XXXXXX2056", "ifsc": "PGBK0412300", "bank_name": "Purnia Gramin Bank (demo)"},
+    "demo_today": "2026-03-21"
+  },
+  {
+    "farmer_id": "F-104",
+    "name": "Suresh Mandal",
+    "name_hi": "सुरेश मंडल",
+    "father_name": "Jagdish Mandal",
+    "phone": "+919000000104",
+    "preferred_language": "hi",
+    "bank": {"account_holder": "Suresh Mandal", "account_masked": "XXXXXX9174", "ifsc": "MSBK0003390", "bank_name": "Mithila Sahkari Bank (demo)"},
+    "demo_today": "2023-10-26"
+  }
+]

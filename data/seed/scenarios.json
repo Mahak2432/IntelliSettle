@@ -1,0 +1,50 @@
+[
+  {
+    "id": "A-flood-bhobhaul-2024",
+    "kind": "real",
+    "farmer_id": "F-101",
+    "policy_no": "KK-24K-DBG-0101",
+    "peril": "flood",
+    "loss_date": "2024-09-30",
+    "filed_at": "2024-10-01T10:30:00+05:30",
+    "description": "रात में कोसी का बाँध टूट गया, पूरा धान का खेत पानी में डूब गया है।",
+    "expected_verdicts": ["looks_genuine"],
+    "weather": {"max_24h_mm_below": 100, "flood_day_rain_below": 2.0}
+  },
+  {
+    "id": "B-excess-rain-sikti-2021",
+    "kind": "real",
+    "farmer_id": "F-102",
+    "policy_no": "KK-21K-ARR-0102",
+    "peril": "excess_rain",
+    "loss_date": "2021-10-19",
+    "filed_at": "2021-10-20T09:15:00+05:30",
+    "description": "कल दिन भर बहुत तेज़ बारिश हुई, कटने को तैयार धान खेत में गिर कर सड़ रही है।",
+    "expected_verdicts": ["looks_genuine"],
+    "weather": {"max_24h_mm_at_least": 200}
+  },
+  {
+    "id": "C-hail-forbesganj-2026",
+    "kind": "real",
+    "farmer_id": "F-103",
+    "policy_no": "KK-26R-ARR-0103",
+    "peril": "hailstorm",
+    "loss_date": "2026-03-20",
+    "filed_at": "2026-03-21T08:45:00+05:30",
+    "description": "रात में आधा घंटा ओले गिरे, मक्का के पत्ते फट गए और पौधे टूट गए।",
+    "expected_verdicts": ["looks_genuine", "needs_review"],
+    "weather": {"max_hourly_mm_at_least": 10}
+  },
+  {
+    "id": "D-fake-flood-bhobhaul-2023",
+    "kind": "fake",
+    "farmer_id": "F-104",
+    "policy_no": "KK-23K-DBG-0104",
+    "peril": "flood",
+    "loss_date": "2023-10-25",
+    "filed_at": "2023-10-26T11:00:00+05:30",
+    "description": "बाढ़ का पानी खेत में घुस गया, धान की पूरी फसल खराब हो गई।",
+    "expected_verdicts": ["looks_suspicious"],
+    "weather": {"window_total_mm_below": 5}
+  }
+]

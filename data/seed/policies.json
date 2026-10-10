@@ -1,0 +1,62 @@
+[
+  {
+    "policy_no": "KK-24K-DBG-0101",
+    "product_code": "crop-parametric-v1",
+    "farmer_id": "F-101",
+    "insurer": "Demo General Insurance",
+    "scheme": "Parametric crop micro-insurance (demo)",
+    "season": "Kharif 2024",
+    "crop": "paddy",
+    "plot": {"khasra_no": "1142", "village": "Bhobhaul", "block": "Kiratpur", "district": "Darbhanga", "state": "Bihar", "area_ha": 0.8, "location": {"lat": 25.971, "lon": 86.363}},
+    "insured_area_ha": 0.8,
+    "sum_insured_inr": 48000,
+    "cover_start": "2024-06-15",
+    "cover_end": "2024-11-30",
+    "perils": ["flood", "excess_rain", "hailstorm"]
+  },
+  {
+    "policy_no": "KK-21K-ARR-0102",
+    "product_code": "crop-parametric-v1",
+    "farmer_id": "F-102",
+    "insurer": "Demo General Insurance",
+    "scheme": "Parametric crop micro-insurance (demo)",
+    "season": "Kharif 2021",
+    "crop": "paddy",
+    "plot": {"khasra_no": "577", "village": "Thengapur Pipra", "block": "Sikti", "district": "Araria", "state": "Bihar", "area_ha": 1.2, "location": {"lat": 26.348, "lon": 87.475}},
+    "insured_area_ha": 1.2,
+    "sum_insured_inr": 72000,
+    "cover_start": "2021-06-15",
+    "cover_end": "2021-11-30",
+    "perils": ["flood", "excess_rain", "hailstorm"]
+  },
+  {
+    "policy_no": "KK-26R-ARR-0103",
+    "product_code": "crop-parametric-v1",
+    "farmer_id": "F-103",
+    "insurer": "Demo General Insurance",
+    "scheme": "Parametric crop micro-insurance (demo)",
+    "season": "Rabi 2025-26",
+    "crop": "maize",
+    "plot": {"khasra_no": "238", "village": "Bhadesar", "block": "Forbesganj", "district": "Araria", "state": "Bihar", "area_ha": 0.6, "location": {"lat": 26.3375, "lon": 87.2555}},
+    "insured_area_ha": 0.6,
+    "sum_insured_inr": 30000,
+    "cover_start": "2025-11-01",
+    "cover_end": "2026-04-30",
+    "perils": ["flood", "excess_rain", "hailstorm"]
+  },
+  {
+    "policy_no": "KK-23K-DBG-0104",
+    "product_code": "crop-parametric-v1",
+    "farmer_id": "F-104",
+    "insurer": "Demo General Insurance",
+    "scheme": "Parametric crop micro-insurance (demo)",
+    "season": "Kharif 2023",
+    "crop": "paddy",
+    "plot": {"khasra_no": "1147", "village": "Bhobhaul", "block": "Kiratpur", "district": "Darbhanga", "state": "Bihar", "area_ha": 0.5, "location": {"lat": 25.971, "lon": 86.363}},
+    "insured_area_ha": 0.5,
+    "sum_insured_inr": 30000,
+    "cover_start": "2023-06-15",
+    "cover_end": "2023-11-30",
+    "perils": ["flood", "excess_rain", "hailstorm"]
+  }
+]

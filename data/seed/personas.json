@@ -1,0 +1,54 @@
+[
+  {
+    "farmer_id": "F-101",
+    "name": "Ramesh Yadav",
+    "name_hi": "रमेश यादव",
+    "village": "Bhobhaul",
+    "district": "Darbhanga",
+    "crop_en": "Paddy, 0.8 ha",
+    "crop_hi": "धान, 0.8 हेक्टेयर",
+    "story_en": "The Kosi embankment breached at night and flooded his paddy.",
+    "story_hi": "रात में कोसी का तटबंध टूटा और धान का खेत डूब गया।",
+    "demo_today": "2024-10-01",
+    "peril": "flood"
+  },
+  {
+    "farmer_id": "F-102",
+    "name": "Abdul Karim",
+    "name_hi": "अब्दुल करीम",
+    "village": "Thengapur Pipra",
+    "district": "Araria",
+    "crop_en": "Paddy, 1.2 ha",
+    "crop_hi": "धान, 1.2 हेक्टेयर",
+    "story_en": "Over 200 mm of rain in one day flattened his ripe paddy.",
+    "story_hi": "एक दिन में 200 मिमी से ज़्यादा बारिश ने पकी धान गिरा दी।",
+    "demo_today": "2021-10-20",
+    "peril": "excess_rain"
+  },
+  {
+    "farmer_id": "F-103",
+    "name": "Sunita Devi",
+    "name_hi": "सुनीता देवी",
+    "village": "Bhadesar",
+    "district": "Araria",
+    "crop_en": "Maize, 0.6 ha",
+    "crop_hi": "मक्का, 0.6 हेक्टेयर",
+    "story_en": "A night hailstorm shredded her maize just before harvest.",
+    "story_hi": "कटाई से ठीक पहले रात की ओलावृष्टि ने मक्का बर्बाद कर दी।",
+    "demo_today": "2026-03-21",
+    "peril": "hailstorm"
+  },
+  {
+    "farmer_id": "F-104",
+    "name": "Suresh Mandal",
+    "name_hi": "सुरेश मंडल",
+    "village": "Bhobhaul",
+    "district": "Darbhanga",
+    "crop_en": "Paddy, 0.5 ha",
+    "crop_hi": "धान, 0.5 हेक्टेयर",
+    "story_en": "Fraud test: claims a flood on a day when no rain fell and no river rose.",
+    "story_hi": "धोखाधड़ी जाँच: ऐसे दिन बाढ़ का दावा जब न बारिश हुई, न नदी चढ़ी।",
+    "demo_today": "2023-10-26",
+    "peril": "flood"
+  }
+]

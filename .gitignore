@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+api/.uploads/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+web/.vercel
+
+# Secrets and local config
+.env
+.env.*
+!.env.example
+*.pem
+service-account*.json
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
