@@ -7,13 +7,14 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 import time
 from pathlib import Path
 
 import httpx
 
 ROOT = Path(__file__).resolve().parents[1]
-API = "https://intellisettle-api-929855157031.asia-south1.run.app"
+API = "https://intellisettle-api-929855157031.us-central1.run.app"
 
 
 def _web_env(name: str) -> str:
@@ -25,7 +26,9 @@ def _web_env(name: str) -> str:
 
 # The Firebase web API key is public by design (it ships in the site), but is kept out of the source.
 FIREBASE_WEB_KEY = os.environ.get("FIREBASE_WEB_KEY") or _web_env("NEXT_PUBLIC_FIREBASE_API_KEY")
-FARMER, POLICY = "F-104", "KK-23K-DBG-0104"
+SCENARIOS = json.loads((ROOT / "data" / "seed" / "scenarios.json").read_text(encoding="utf-8"))
+SCENARIO = next(s for s in SCENARIOS if s["farmer_id"] == (sys.argv[1] if len(sys.argv) > 1 else "F-104"))
+FARMER, POLICY = SCENARIO["farmer_id"], SCENARIO["policy_no"]
 DEMO = ROOT / "web" / "public" / "demo" / FARMER
 
 
@@ -42,14 +45,19 @@ def anonymous_token() -> str:
 def main() -> None:
     headers = {"Authorization": f"Bearer {anonymous_token()}"}
     with httpx.Client(base_url=API, headers=headers, timeout=120) as api:
-        assert api.get("/api/health").json() == {"status": "ok"}
+        for attempt in range(10):  # the first request may land on a cold start
+            health = api.get("/api/health")
+            if health.status_code == 200:
+                break
+            time.sleep(6)
+        assert health.json() == {"status": "ok"}, health.text[:200]
         api.post("/api/session", json={"role": "farmer", "farmer_id": FARMER}).raise_for_status()
         manifest = json.loads((DEMO / "manifest.json").read_text(encoding="utf-8"))
         files = [("photos", (p, (DEMO / p).read_bytes(), "image/jpeg")) for p in manifest["photos"]]
         files += [(k, (manifest[k], (DEMO / manifest[k]).read_bytes(), "image/jpeg")) for k in ("land_record", "bank_passbook")]
         filed = api.post(
             "/api/claims",
-            data={"policy_no": POLICY, "peril": "flood", "loss_date": "2023-10-25", "description": "smoke test"},
+            data={"policy_no": POLICY, "peril": SCENARIO["peril"], "loss_date": SCENARIO["loss_date"], "description": SCENARIO["description"]},
             files=files,
         )
         filed.raise_for_status()

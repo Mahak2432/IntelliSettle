@@ -48,6 +48,14 @@ Decisions confirmed by the team. Background is in [PROJECT_CONTEXT.md](../PROJEC
 - **Synthetic documents** use fictional bank names and are visibly marked as samples. They never imitate a real bank or a government seal.
 - **Known simplification:** the radar check may use a satellite pass from after the filing date (e.g. 6 Oct for event A). In production the claim would wait for, and re-check on, the next pass.
 
+## Deployment (2026-10-12)
+- **Web:** Firebase Hosting, https://insurance-crisis.web.app. Static export, deployed with `scripts/deploy_hosting.py`.
+- **API:** Cloud Run **us-central1**, https://intellisettle-api-929855157031.us-central1.run.app. It scales to zero, with at most 2 instances.
+  - It moved from asia-south1 because, after the billing hold was lifted, Cloud Run in that region would not start instances for traffic (429 "no available instance"), while the same image served immediately in us-central1.
+- **Photos:** private bucket `gs://insurance-crisis-claims` (us-central1, always-free tier).
+- **Gemini:** runs on Vertex AI through the Cloud Run service account; no API key is stored in the cloud.
+- **Checks before a demo:** run `scripts/smoke_prod.py F-101` (real flood) and `scripts/smoke_prod.py F-104` (fake), then clear the test claims.
+
 ## Open questions
 - [x] App name: **IntelliSettle** (confirmed 2026-10-11). Shown in Latin script in both languages.
 - [x] Git: local commits only for now; push to GitHub later.
