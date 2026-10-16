@@ -47,6 +47,17 @@ async def health() -> dict:
 # --- Session ----------------------------------------------------------------------
 
 
+@app.delete("/api/demo/claims")
+async def reset_demo(s: Session = Depends(session), c: Container = Depends(get_container)) -> dict:
+    """Start the demo over: removes only the claims this browser session filed."""
+    if not c.settings.demo_sandbox:
+        raise HTTPException(403, "Resetting is only available in demo mode.")
+    mine = await c.claims.repo.list(sandbox=s.uid)
+    for claim in mine:
+        await c.claims.repo.delete(claim.claim_id)
+    return {"removed": len(mine)}
+
+
 @app.get("/api/demo/personas")
 async def personas(c: Container = Depends(get_container)) -> list[dict]:
     path = c.settings.seed_dir / "personas.json"
@@ -149,14 +160,24 @@ async def submit_claim(
         filed_from=GeoPoint(lat=filed_lat, lon=filed_lon) if filed_lat is not None else None,
         photos=new_photos,
         documents=docs,
+        sandbox=_sandbox(s, c),
     )
     background.add_task(_assess_in_background, c, claim.claim_id)
     return FarmerClaimView.of(claim)
 
 
+def _sandbox(s: Session, c: Container) -> str | None:
+    """In demo mode each browser session is its own sandbox; otherwise everything is shared."""
+    return s.uid if c.settings.demo_sandbox else None
+
+
 async def _claim_for(claim_id: str, s: Session, c: Container) -> Claim:
     claim = await c.claims.repo.get(claim_id)
-    if claim is None or (s.role == "farmer" and claim.farmer_id != s.farmer_id):
+    if (
+        claim is None
+        or claim.sandbox != _sandbox(s, c)
+        or (s.role == "farmer" and claim.farmer_id != s.farmer_id)
+    ):
         raise HTTPException(404, "Claim not found.")
     return claim
 
@@ -168,8 +189,9 @@ async def list_claims(
     c: Container = Depends(get_container),
 ) -> list[FarmerClaimView] | list[ReviewQueueItem]:
     if s.role == "farmer":
-        return [FarmerClaimView.of(x) for x in await c.claims.repo.list(farmer_id=s.farmer_id)]
-    claims = await c.claims.repo.list(statuses=set(status) if status else None)
+        mine = await c.claims.repo.list(farmer_id=s.farmer_id, sandbox=_sandbox(s, c))
+        return [FarmerClaimView.of(x) for x in mine]
+    claims = await c.claims.repo.list(statuses=set(status) if status else None, sandbox=_sandbox(s, c))
     return [
         ReviewQueueItem.of(x, c.reference.farmer(x.farmer_id), c.reference.policy(x.policy_no))
         for x in claims
@@ -218,6 +240,7 @@ async def appeal(
     s: Session = Depends(farmer_session),
     c: Container = Depends(get_container),
 ) -> FarmerClaimView:
+    await _claim_for(claim_id, s, c)
     return FarmerClaimView.of(await c.claims.appeal(claim_id, s.farmer_id, body.message))
 
 
@@ -234,6 +257,7 @@ async def decide(
     s: Session = Depends(reviewer_session),
     c: Container = Depends(get_container),
 ) -> ReviewClaimView:
+    await _claim_for(claim_id, s, c)
     claim = await c.claims.decide(
         claim_id, action=body.action, fast_lane=body.fast_lane, reason=body.reason, reviewer_id=s.uid
     )

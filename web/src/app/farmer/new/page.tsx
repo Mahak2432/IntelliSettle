@@ -1,6 +1,6 @@
 "use client";
 
-import { Camera, Check, ImagePlus, Mic, Square, X } from "lucide-react";
+import { Camera, Check, ImagePlus, Mic, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -8,13 +8,13 @@ import useSWR from "swr";
 import { BigButton, Spinner } from "@/components/common";
 import { FarmerShell } from "@/components/farmer-shell";
 import { PerilIcon } from "@/components/peril-icon";
+import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/lib/api";
 import { isoDay, longDate } from "@/lib/format";
 import { PERIL, useLang } from "@/lib/i18n";
 import type { FarmerClaim, Me, Peril } from "@/lib/types";
-import { guessPeril, useSpeech } from "@/lib/use-speech";
 import { cn } from "@/lib/utils";
 
 type Shot = { file: File; url: string; capturedAt?: string; lat?: number; lon?: number };
@@ -58,12 +58,6 @@ function NewClaim() {
   const photoInput = useRef<HTMLInputElement>(null);
   const paperInput = useRef<HTMLInputElement>(null);
   const paperKind = useRef<PaperKind>("land_record");
-
-  const speech = useSpeech(lang, (text) => {
-    setDescription((d) => (d ? `${d} ${text}` : text));
-    const guess = guessPeril(text);
-    if (guess) setPeril(guess);
-  });
 
   const today = farmer?.demo_today ?? isoDay(new Date());
   useEffect(() => () => shots.forEach((s) => URL.revokeObjectURL(s.url)), []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -173,22 +167,19 @@ function NewClaim() {
             ))}
           </div>
 
+          {/* Voice input is shown but not live yet: tapping it explains it is coming soon. */}
           <div className="mt-8 flex flex-col items-center gap-3 text-center">
             <button
-              onClick={speech.listening ? speech.stop : speech.start}
-              className={cn(
-                "grid size-20 place-items-center rounded-full bg-indigo text-white",
-                speech.listening && "listening",
-              )}
-              aria-label={speech.listening ? t("stopListening") : t("speak")}
+              onClick={() => toast.info(t("voiceSoon"))}
+              className="grid size-20 place-items-center rounded-full bg-indigo/70 text-white"
+              aria-label={`${t("speak")}: ${t("comingSoon")}`}
             >
-              {speech.listening ? <Square className="size-7" /> : <Mic className="size-9" />}
+              <Mic className="size-9" />
             </button>
-            <p className="font-semibold text-indigo">{speech.listening ? t("listening") : t("speak")}</p>
-            {!speech.supported && <p className="text-sm text-slate">{t("voiceUnsupported")}</p>}
-            {(speech.interim || description) && (
-              <p className="max-w-md rounded-2xl bg-surface px-4 py-3 text-left italic">{speech.interim || description}</p>
-            )}
+            <p className="flex items-center gap-2 font-semibold text-indigo">
+              {t("speak")}
+              <Badge className="h-auto border-0 bg-haldi-soft px-2 py-0.5 text-haldi-ink">{t("comingSoon")}</Badge>
+            </p>
           </div>
         </section>
       )}

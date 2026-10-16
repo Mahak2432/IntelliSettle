@@ -2,8 +2,10 @@
 
 import { ChevronRight, CloudRain, LifeBuoy, Plus, Sprout } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
 import useSWR from "swr";
 import { BigButton, ErrorNote } from "@/components/common";
+import { Badge } from "@/components/ui/badge";
 import { FarmerShell } from "@/components/farmer-shell";
 import { PerilIcon } from "@/components/peril-icon";
 import { StatusBadge } from "@/components/status-badge";
@@ -146,10 +148,14 @@ export default function FarmerHome() {
       </section>
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-2">
-        <Link href="/farmer/help/" className="flex min-h-12 items-center gap-2 rounded-xl px-1 font-semibold text-indigo">
+        <button
+          onClick={() => toast.info(t("helpSoon"))}
+          className="flex min-h-12 items-center gap-2 rounded-xl px-1 font-semibold text-indigo"
+        >
           <LifeBuoy className="size-5" aria-hidden />
           {t("askHelp")}
-        </Link>
+          <Badge className="h-auto border-0 bg-haldi-soft px-2 py-0.5 text-haldi-ink">{t("comingSoon")}</Badge>
+        </button>
         <Link href="/" className="flex min-h-11 items-center text-sm text-slate underline">
           {t("changeUser")}
         </Link>

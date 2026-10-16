@@ -85,23 +85,49 @@ def test_full_claim_journey_over_http(client):
     assert farmer_view["message_hi"]
     assert "assessment" not in farmer_view and "score" not in json.dumps(farmer_view)
 
-    client.post("/api/session", headers=OFFICER, json={"role": "reviewer"})
-    queue = client.get("/api/claims", headers=OFFICER).json()
+    # The same browser switches to the officer role, as on the demo landing page.
+    client.post("/api/session", headers=FARMER, json={"role": "reviewer"})
+    queue = client.get("/api/claims", headers=FARMER).json()
     assert queue[0]["verdict"] == "looks_genuine"
     assert queue[0]["score"] >= 80
 
-    detail = client.get(f"/api/claims/{claim_id}", headers=OFFICER).json()
+    detail = client.get(f"/api/claims/{claim_id}", headers=FARMER).json()
     assert len(detail["claim"]["assessment"]["checks"]) == 10
-    photo = client.get(f"/api/claims/{claim_id}/files/photos/0", headers=OFFICER)
+    photo = client.get(f"/api/claims/{claim_id}/files/photos/0", headers=FARMER)
     assert photo.headers["content-type"] == "image/jpeg"
 
     decided = client.post(
-        f"/api/claims/{claim_id}/decision", headers=OFFICER, json={"action": "approve", "fast_lane": True}
+        f"/api/claims/{claim_id}/decision", headers=FARMER, json={"action": "approve", "fast_lane": True}
     )
     assert decided.json()["claim"]["status"] == "paid"
 
+    client.post("/api/session", headers=FARMER, json={"role": "farmer", "farmer_id": "F-001"})
     final = client.get(f"/api/claims/{claim_id}", headers=FARMER).json()
     assert final["payout"]["amount_inr"] == 24000
+
+
+def test_each_browser_gets_its_own_demo_sandbox(client):
+    client.post("/api/session", headers=FARMER, json={"role": "farmer", "farmer_id": "F-001"})
+    claim_id = file_claim(client)["claim_id"]
+
+    client.post("/api/session", headers=OFFICER, json={"role": "reviewer"})
+    assert client.get("/api/claims", headers=OFFICER).json() == []
+    assert client.get(f"/api/claims/{claim_id}", headers=OFFICER).status_code == 404
+    denied = client.post(
+        f"/api/claims/{claim_id}/decision", headers=OFFICER, json={"action": "approve", "fast_lane": True}
+    )
+    assert denied.status_code == 404
+
+    # Filing the same demo claim again in one browser is still caught as a duplicate there.
+    second = file_claim(client)
+    client.post("/api/session", headers=FARMER, json={"role": "reviewer"})
+    checks = client.get(f"/api/claims/{second['claim_id']}", headers=FARMER).json()["claim"]["assessment"][
+        "checks"
+    ]
+    assert {c["code"]: c["status"] for c in checks}["no_duplicate_claim"] == "fail"
+
+    assert client.delete("/api/demo/claims", headers=FARMER).json() == {"removed": 2}
+    assert client.get("/api/claims", headers=FARMER).json() == []
 
 
 def test_farmers_cannot_review_and_need_a_session(client):

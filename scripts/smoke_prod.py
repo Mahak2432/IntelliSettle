@@ -78,7 +78,10 @@ def main() -> None:
         print("evidence", {e["source"]: e["signal"] for e in a["evidence"]})
         photo = api.get(f"/api/claims/{claim_id}/files/photos/0")
         print("photo from bucket", photo.status_code, photo.headers.get("content-type"), len(photo.content), "bytes")
-        print(claim_id)
+        print("checks not passed", {c["code"]: c["status"] for c in a["checks"] if c["status"] != "pass"})
+        print("payout", a["payout_quote"]["amount_inr"])
+        # Each run is its own demo sandbox; clear it so the live database stays clean.
+        print("cleaned up", api.delete("/api/demo/claims").json())
 
 
 if __name__ == "__main__":

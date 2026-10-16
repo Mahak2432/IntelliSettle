@@ -103,6 +103,7 @@ class ClaimService:
         filed_from: GeoPoint | None = None,
         photos: list[NewPhoto] = (),
         documents: list[NewDocument] = (),
+        sandbox: str | None = None,
     ) -> Claim:
         policy = self.reference.policy(policy_no)
         if policy is None or policy.farmer_id != farmer_id:
@@ -116,6 +117,7 @@ class ClaimService:
         now = self.now_for(farmer_id)
         claim = Claim(
             claim_id=claim_id,
+            sandbox=sandbox,
             policy_no=policy_no,
             farmer_id=farmer_id,
             product_code=policy.product_code,
@@ -175,7 +177,10 @@ class ClaimService:
             sowing_record=self.reference.sowing_record(
                 farmer.farmer_id, policy.plot.khasra_no, policy.season
             ),
-            other_claims=[c for c in await self.repo.list() if c.claim_id != claim.claim_id],
+            # Duplicate and reused-photo checks compare against claims in the same sandbox only.
+            other_claims=[
+                c for c in await self.repo.list(sandbox=claim.sandbox) if c.claim_id != claim.claim_id
+            ],
         )
 
     # --- Reviewer actions -----------------------------------------------------------

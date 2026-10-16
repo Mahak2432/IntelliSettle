@@ -35,6 +35,9 @@ class Settings(BaseSettings):
     allowed_origins: list[str] = ["http://localhost:3000"]
     # dev: trust the X-Dev-Uid header (local only). firebase: verify Firebase ID tokens.
     auth_mode: Literal["dev", "firebase"] = "dev"
+    # Demo isolation: each browser session sees and is checked against only its own claims.
+    # Turn off for real use, so duplicate and reused-photo checks span every farmer.
+    demo_sandbox: bool = True
 
     @property
     def ai_enabled(self) -> bool:

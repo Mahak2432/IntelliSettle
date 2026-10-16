@@ -272,6 +272,8 @@ class Claim(BaseModel):
     policy_no: str
     farmer_id: str
     product_code: str
+    # Demo isolation: the browser session that filed the claim. None = shared by everyone.
+    sandbox: str | None = None
     peril: Peril
     loss_date: date
     submitted_at: datetime

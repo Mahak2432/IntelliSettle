@@ -3,6 +3,7 @@
 import { ChevronRight, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 import useSWR from "swr";
 import { BigButton, BrandMark, ErrorNote, LangToggle, Spinner } from "@/components/common";
 import { PerilIcon } from "@/components/peril-icon";
@@ -10,6 +11,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { api } from "@/lib/api";
 import { longDate } from "@/lib/format";
 import { useLang } from "@/lib/i18n";
 import { startFarmerSession, startOfficerSession } from "@/lib/session";
@@ -21,6 +23,17 @@ export default function Home() {
   const { data: personas, error } = useSWR<Persona[]>("/api/demo/personas");
   const [busy, setBusy] = useState<string | null>(null);
   const [failure, setFailure] = useState<string | null>(null);
+
+  async function resetDemo() {
+    try {
+      // The reset needs a session; join as officer first (harmless) so it works on a first visit too.
+      await startOfficerSession();
+      await api("/api/demo/claims", { method: "DELETE" });
+      toast.success(t("resetDone"));
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : String(e));
+    }
+  }
 
   async function enter(key: string, start: () => Promise<void>, to: string) {
     setBusy(key);
@@ -151,7 +164,12 @@ export default function Home() {
         </section>
       </div>
 
-      <p className="mt-14 border-t border-line pt-5 text-sm text-slate">{t("demoNote")}</p>
+      <div className="mt-14 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5 text-sm text-slate">
+        <p>{t("demoNote")}</p>
+        <button onClick={resetDemo} className="min-h-10 rounded-lg px-2 font-semibold text-indigo underline">
+          {t("resetDemo")}
+        </button>
+      </div>
     </main>
   );
 }
