@@ -4,7 +4,7 @@
 
 Built for the **Google Cloud AI Builder Cup 2026**, BFSI track: *Intelligent Risk, Fraud & Financial Experiences*.
 
-**[Live demo](https://insurance-crisis.web.app)** · **[Demo video (3 min)](#)** · **Team:** [Team name]
+**[Live demo](https://insurance-crisis.web.app)** · **[Demo video (3 min)](https://drive.google.com/file/d/1dkT8_0-YU8SANGgvYtRB1axn0jXxO9-G/view)** · **Team:** Crisis
 
 ![Review desk: a genuine flood claim scored 98, with the AI's reasons and a one-click Fast approve](docs/images/review-desk.jpg)
 
